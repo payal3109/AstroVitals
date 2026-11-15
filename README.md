@@ -21,7 +21,7 @@ NASA OSDR OSD-343 and NASA Twins Study are research references for background co
 - NASA Twins Study: https://www.nasa.gov/twins-study-the-research/
 - NOAA Space Weather Prediction Center: https://www.swpc.noaa.gov/
 
-Only list a source as a dataset actually used if your team has downloaded, processed, or queried it in the final implementation. Otherwise label it as a research reference.
+These are research references for background context only. No external dataset was downloaded or used by this prototype.
 
 ## Tech stack
 Python, Flask, Pandas, NumPy, scikit-learn, SQLite, HTML, CSS.
@@ -62,11 +62,10 @@ Synthetic anomalies are injected on:
 The application uses these cases to demonstrate anomaly detection. Detection is not guaranteed to identify every injected case because the model and thresholds are illustrative.
 
 ## SI / AI assistance disclosure
-Update this section to accurately reflect the tools your team actually used. Example:
-"ChatGPT was used for coding assistance and documentation drafting. Team members reviewed, tested and modified the generated code." Do not claim tools were used if they were not.
+Claude (by Anthropic) was used for coding assistance, code review, debugging and documentation. Team ROVEX members reviewed, tested and modified the generated code. All data in this project is synthetic and created by `simulate.py`.
 
 ## Limitations and safety
 This is a hackathon research prototype, not a medical device. It does not diagnose, predict clinical events, or replace astronaut/flight surgeon judgement. Thresholds and synthetic indices are not medically validated. Any real mission deployment would require validated sensors, clinical review, privacy/security controls, verification and operational approval.
 
 ## License
-Add the license selected by your team before public release.
+This project is released under the MIT License. See the `LICENSE` file for details.
