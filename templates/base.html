@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}AstroVitals{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-icon">✦</span> ASTROVITALS <small>TEAM ROVEX</small></div>
+  <nav><a href="/">Dashboard</a><a href="/checkins">Mood history</a></nav>
+</header>
+<main class="container">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="toast">{{ messages[0] }}</div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer>AstroVitals prototype · Synthetic demonstration data · Not a medical device</footer>
+</body>
+</html>

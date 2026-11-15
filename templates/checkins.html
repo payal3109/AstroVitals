@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}AstroVitals | Mood history{% endblock %}
+{% block content %}
+<section class="hero compact"><div><p class="eyebrow">LOCAL SQLITE RECORDS</p><h1>Mood check-in history</h1><p class="muted">Entries saved on this device.</p></div></section>
+<article class="panel">
+{% if checkins %}
+<div class="table-scroll"><table><thead><tr><th>Astronaut</th><th>Day</th><th>Mood</th><th>Stress</th><th>Note</th><th>Saved</th></tr></thead><tbody>
+{% for c in checkins %}<tr><td>{{ c.astronaut_id }}</td><td>{{ c.day }}</td><td>{{ c.mood }}/10</td><td>{{ c.stress }}/10</td><td>{{ c.note }}</td><td>{{ c.created_at }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<p class="muted">No check-ins yet. Add one from the dashboard.</p>{% endif %}
+</article>
+{% endblock %}

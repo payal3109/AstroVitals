@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}AstroVitals | Dashboard{% endblock %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">MISSION HEALTH INTELLIGENCE</p>
+    <h1>Personal health, <span>one mission at a time.</span></h1>
+    <p class="muted">Individual baselines help highlight changes from an astronaut's usual pattern.</p>
+  </div>
+  <div class="orbit">✦</div>
+</section>
+
+<form class="selector" method="get">
+  <label for="astronaut">Astronaut profile</label>
+  <select id="astronaut" name="astronaut" onchange="this.form.submit()">
+    {% for aid in astronaut_ids %}<option value="{{ aid }}" {% if aid == selected %}selected{% endif %}>{{ aid }}</option>{% endfor %}
+  </select>
+  <span class="tag">DAY {{ latest.day }} / 180</span>
+</form>
+
+<section class="metrics">
+  <article class="metric"><span>Heart rate</span><strong>{{ latest.heart_rate_bpm }} <small>bpm</small></strong><em>Personal baseline comparison</em></article>
+  <article class="metric"><span>Sleep</span><strong>{{ latest.sleep_hours }} <small>hrs</small></strong><em>Last recorded day</em></article>
+  <article class="metric"><span>Activity</span><strong>{{ "{:,}".format(latest.activity_steps) }} <small>steps</small></strong><em>Daily movement estimate</em></article>
+  <article class="metric"><span>Stress score</span><strong>{{ latest.stress_score }} <small>/100</small></strong><em>Synthetic self-report</em></article>
+</section>
+
+<section class="grid">
+  <article class="panel wide">
+    <div class="panel-heading"><div><p class="eyebrow">PERSONAL BASELINE ENGINE</p><h2>Health status</h2></div>
+      {% if latest.is_anomaly %}<span class="status danger">{{ latest.risk_level }} alert</span>{% else %}<span class="status good">No current alert</span>{% endif %}
+    </div>
+    <p>{{ latest_action }}</p>
+    <div class="baseline-note">Baseline: first 30 days, then rolling 30-day personal norm · Detection: robust Z-score + Isolation Forest</div>
+    <div class="mini-bars">
+      {% for item in history %}
+      <div class="bar-wrap" title="Day {{ item.day }}: {{ item.heart_rate_bpm }} bpm{% if item.is_anomaly %} – anomaly{% endif %}">
+        <div class="bar {% if item.is_anomaly %}bar-alert{% endif %}" style="height:{{ item.bar_height }}px"></div>
+        <small>{{ item.day }}</small>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="tiny muted">Heart-rate trend for the latest 14 days (bar height scaled to this window). Red bars indicate detected anomalies.</p>
+  </article>
+  <article class="panel">
+    <p class="eyebrow">MISSION SUMMARY</p><h2>{{ total_alerts }} alerts</h2>
+    <p class="muted">Detected across this astronaut's 180-day simulated record.</p>
+    <div class="summary-line"><span>Current mood</span><b>{{ latest.mood_score }}/10</b></div>
+    <div class="summary-line"><span>Radiation index</span><b>{{ latest.radiation_index }}</b></div>
+    <div class="summary-line"><span>Bone health index</span><b>{{ latest.bone_health_index }}</b></div>
+    <div class="summary-line"><span>Muscle health index</span><b>{{ latest.muscle_health_index }}</b></div>
+  </article>
+</section>
+
+<section class="grid">
+  <article class="panel wide">
+    <p class="eyebrow">EXPLAINABLE MONITORING</p><h2>Recent alerts</h2>
+    {% if alerts %}
+    <div class="table-scroll"><table><thead><tr><th>Day</th><th>Level</th><th>Reason</th><th>Suggested action</th></tr></thead><tbody>
+      {% for alert in alerts %}
+      <tr><td>{{ alert.day }}</td><td><span class="status {% if alert.risk_level == 'High' %}danger{% else %}warning{% endif %}">{{ alert.risk_level }}</span></td>
+      <td>{{ alert.anomaly_reasons }}</td><td>{{ alert.recommended_action }}</td></tr>
+      {% endfor %}
+    </tbody></table></div>
+    {% else %}<p class="muted">No anomalies detected in this profile.</p>{% endif %}
+  </article>
+  <article class="panel">
+    <p class="eyebrow">ASTRONAUT CHECK-IN</p><h2>How are you feeling?</h2>
+    <form action="/checkin" method="post" class="checkin">
+      <input type="hidden" name="astronaut_id" value="{{ selected }}">
+      <input type="hidden" name="day" value="{{ latest.day }}">
+      <label>Mood (1 = low, 10 = great)<input type="number" name="mood" min="1" max="10" value="7" required></label>
+      <label>Stress (1 = low, 10 = high)<input type="number" name="stress" min="1" max="10" value="3" required></label>
+      <label>Optional note<textarea name="note" maxlength="300" placeholder="Any symptoms or observations?"></textarea></label>
+      <button type="submit">Save check-in</button>
+    </form>
+  </article>
+</section>
+<div class="disclaimer">Research prototype only. All astronaut daily records are synthetic. Alerts and actions are demonstrations, not clinical diagnoses or operational flight rules.</div>
+{% endblock %}
